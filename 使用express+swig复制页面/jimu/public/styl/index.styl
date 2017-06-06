@@ -1,0 +1,112 @@
+html,body,p,h1,h2,h3,h4,h5,h6,ul,ol
+    margin:0
+    padding:0
+
+body
+    font-size:12px
+    color:#333
+
+.jm
+    position:relative
+    max-width:750px
+    min-width:500px
+    margin:0 auto
+
+
+.item-tit
+    font-size:20px
+    text-align:center
+    &::after
+        position:absoute
+        display:block
+        left:0
+        right:0
+        margin:15px auto
+        width:20px
+        height:3px
+        background:#3793df
+        content:''
+
+.feature-wrapper
+    padding:32px 36px 58px
+    .features
+        overflow:hidden
+        .feature-item
+            float:left
+            width:50%
+            .feature-item-img
+                display:block
+                margin:42px auto
+                width:60px
+                height:60px
+            p
+                text-align:center
+                line-height:18px
+                color:#8b939f
+            .feature-item-tit
+                font-size:20px
+                margin:8px 0
+                color:#333
+
+.carousel-container
+    overflow:hidden
+    max-width:750px
+    padding: 56px 36px 80px
+    background : url('/images/mountain-bg-fa6666d1ac.png')
+    background-size : cover
+    box-sizing:border-box
+    .item-tit
+        color : #fff
+        margin-bottom : 60px
+        &::after
+            background : #fff
+    .swiper-slide
+        display:block
+        transform:scale(1,.9)
+        padding:0 21px 42px 21px
+        opacity:.8
+        box-shadow: 0 0 60px 0 rgba(19,105,176,.8)
+        border-radius:8px
+        box-sizing : border-box
+        .swiper-info
+            height:280px
+        .sub-tit
+            font-size:30px
+            margin:30px 0
+        .swiper-desc
+            font-size:12px
+            padding:7px 0 7px 15px
+            text-align:left
+        .swiper-tit
+            display:block
+            float:left
+            margin-right:6px
+    .swiper-slide-active
+        opacity:1
+        transform:scale(1,1)
+        transition:transform .5s
+    .swiper-pagination
+        bottom:-70px
+        .swiper-pagination-bullet
+            background:rgba(255,255,255,.5)
+        .swiper-pagination-bullet-active
+            background:#fff
+
+.jimu-story
+    padding:56px 28px
+    max-width:750px
+    box-sizing:border-box
+    .item-tit
+        margin-bottom:56px
+    p
+        font-size:12px
+        margin-bottom:14px
+        &.content,&.tit
+            text-align:center
+        &.tit
+            font-size:17px
+    .story-img
+        display:block
+        width:80px
+        height:80px
+        margin:42px auto 21px auto

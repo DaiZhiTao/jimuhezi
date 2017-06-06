@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue抽奖程序</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            background: rgba(0,0,0,.5);
+            min-height: 500px;
+            font-size: 14px;
+        }
+/*    app居中     */
+        #app{
+            width: 800px;
+            margin: 0 auto;
+            margin-top: 60px;
+        }
+/*    左侧定宽    */
+        .aside{
+            float: left;
+            width: 300px;
+            min-height: 420px;
+            background: #333;
+            color:#fff;
+        }
+        .main{
+            min-height: 420px;
+            overflow: hidden;
+            background: #f7f7f7;
+        }
+/*    侧边栏的小标题    */
+        .tit{
+            height: 60px;
+            line-height: 60px;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 2px solid #fff;
+        }
+/*    已兑换奖品容器    */
+        .prize{
+            padding: 15px;
+            height: 285px;
+            overflow: hidden;
+        }
+/*    每一项已兑换奖品    */
+        .prize-item{
+            float: left;
+            width: 70px;
+            height: 70px;
+            padding: 20px 10px;
+            margin-left: 15px;
+            text-align: center;
+            margin-top: 15px;
+            background: #fff;
+            color:#333;
+        }
+/*     重新开始   */
+        .restart{
+            height: 70px;
+            padding: 10px;
+            margin-top: 3px;
+        }
+
+        #restart{
+            display: inline-block;
+            width: 100%;
+            height: 50px;
+            line-height: 30px;
+            text-align: center;
+            text-decoration: none;
+            border: 10px solid #FE8C29;
+            border-radius: 10px;
+            background: #FE8C29;
+            color: #fff;
+        }
+/*    右侧游戏信息提示    */
+        .tip-wrapper{
+            border-bottom: 2px solid #333;
+        }
+
+        .tip{
+            height: 29px;
+            line-height: 29px;
+        }
+/*    次数的样式    */
+        .times{
+            margin: 0 8px;
+            font-size: 18px;
+            font-style: italic;
+            color:orange;
+        }
+/*    游戏窗口样式    */
+        .frame-container{
+            overflow: hidden;
+            height: 285px;
+        }
+
+        .frame{
+            width: 200px;
+            height: 142px;
+            line-height: 142px;
+            margin: 71px auto;
+            overflow: hidden;
+            font-size: 21px;
+            text-align: center;
+            color:#fff;
+            background: #333;
+        }
+
+        .control{
+            margin-top: 3px;
+            padding: 10px 20px;
+            height: 70px;
+            line-height: 70px;
+        }
+        /*    开始游戏按钮    */
+        .start{
+            display: inline-block;
+            vertical-align: top;
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            background: #8CFE94;
+            color: #fff;
+            cursor: pointer;
+        }
+        /*    按钮禁用    */
+        .start[disabled]{
+            cursor:not-allowed ;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="aside">
+            <h3 class="tit">已兑换奖品</h3>
+            <div class="prize">
+                <div class="prize-item" v-for="item in got">{{item.description}}:<br>{{item.prize}}元</div>
+            </div>
+            <div class="restart">
+                <a id="restart" href="javascript:void(0)" @click="restart">再来一次</a>
+            </div>
+        </div>
+        <div class="main">
+            <div class="tip-wrapper">
+                <p class="tip">您总共有<span  class="times">{{total}}</span>次抽奖机会</p>
+                <p class="tip" v-show="remain > 0">现在剩余<span class="times">{{remain}}</span>次机会</p>
+                <p class="tip" v-show="remain === 0">您的抽奖次数已经使用完了，快重新开始吧！</p>
+            </div>
+            <div class="frame-container">
+                <div class="frame">
+                        <div>{{current.description}}</div>
+                </div>
+            </div>
+            <div class="control">
+                <a class="start" @click="beginGame" :disabled="remain === 0 || isGaming">开始抽奖</a>
+            </div>
+        </div>
+    </div>
+    <script src="vue.min.js"></script>
+    <script>
+//     奖品数据
+    const PRIZES = [
+        {prize:9,'description':'一等奖'},
+        {prize:8,'description':'二等奖'},
+        {prize:7,'description':'三等奖'},
+        {prize:6,'description':'四等奖'},
+        {prize:5,'description':'五等奖'},
+        {prize:4,'description':'六等奖'},
+        {prize:3,'description':'七等奖'},
+        {prize:2,'description':'八等奖'},
+        {prize:1,'description':'九等奖'}
+    ];
+
+    function $(id){
+        return document.getElementById(id);
+    }
+
+    // 实例化Vue
+    var app = new Vue({
+        el:'#app',
+
+        data:{
+            //    直接使用PRIZES -> 对象的引用
+            //    采用深复制的方法
+            prizes:Object.create(PRIZES),
+            // 当前摇奖区显示的信息
+            current:{prize:0,'description':'点击按钮开始抽奖'},
+            // 已经兑换的奖品数组
+            got:[],
+            //    剩余抽奖次数
+            remain:PRIZES.length,
+            //     总次数
+            total:PRIZES.length,
+            //     是否处于正在抽奖
+            isGaming:false,
+            //     定时器
+            timer:null,
+            //    抽中奖品的下标
+            currentIndex:-1
+        },
+        methods:{
+            // 主要函数
+            // 用来生成随机的奖项
+            showPrize(){
+                // 处于游戏状态
+                this.isGaming = true;
+                var _self = this;
+                // 随机初始速度
+                var step = 20 + Math.random()*40;
+                //    开始定时器
+                this.timer = setInterval(function(){
+                    // 摇奖速度减慢
+                    step *= .8;
+                    // 随机生成的下标
+                    var randomIndex = Math.floor(Math.random()*_self.prizes.length);
+                    // 从PRIZES中显示，这样就不会在剩余一两个奖品时显得很尴尬
+                    _self.current = PRIZES[Math.floor(Math.random()*PRIZES.length)];
+                    // 停止条件
+                    if(step <= .1){
+                        // 清除定时器
+                        clearInterval(_self.timer);
+                        //     显示获得的奖项
+                        _self.current = _self.prizes[randomIndex];
+                        //     将获得的奖品pop入已兑换奖品
+                        _self.got.push(_self.prizes[randomIndex]);
+                        //     保存这个已兑换奖品
+                        _self.currentIndex = randomIndex;
+                        //     撤销游戏状态
+                        _self.isGaming = false;
+                        //     剩余次数减1
+                        _self.remain -= 1;
+                    }
+                },step);
+            },
+            // 开始游戏
+            beginGame(){
+                //     当处于游戏状态时   点击无效
+                if(this.isGaming){
+                    return;
+                }
+                //     如果存在奖品下标
+                if(this.currentIndex >= 0){
+                    //     将该奖品删除
+                    this.prizes.splice(this.currentIndex,1);
+                }
+                //     开始抽奖
+                this.showPrize();
+            },
+            // 重新开始游戏
+           restart:function(){
+            //        判断是否还有机会
+                if(this.remain >0){
+                    // 弹出一个确认框
+                    if(!confirm('抽奖未结束，确定要重新开始吗?')){
+                        return ;
+                    }
+                }else{
+                    //     当已无机会
+                    alert('谢谢您参与本次抽奖!');
+                    this.prizes = Object.create(PRIZES);
+                    this.remain = PRIZES.length;
+                    this.got = [];
+                    this.current = {prize:0,'description':'点击按钮开始抽奖'};
+                }
+            }
+        }
+    });
+    </script>
+</body>
+</html>

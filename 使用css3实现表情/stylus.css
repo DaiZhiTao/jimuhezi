@@ -1,0 +1,290 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.frog {
+  position: relative;
+  margin: 0 auto;
+  margin-top: 200px;
+  width: 200px;
+  height: 160px;
+  border-radius: 50%;
+  box-shadow: 6px 6px 0 0 #d9f3c0;
+  background: #a3d768;
+}
+.frog::before,
+.frog::after {
+  position: absolute;
+  top: 36px;
+  width: 24px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f7d2c9;
+  content: '';
+  animation: hide 2.8s infinite;
+}
+.frog::before {
+  left: 30px;
+}
+.frog::after {
+  right: 30px;
+}
+.frog .mouth {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border-bottom: 16px solid #fff;
+  border-radius: 28px;
+  box-sizing: border-box;
+}
+.frog .eye-wrapper {
+  position: absolute;
+  top: -24px;
+  width: 54px;
+  height: 54px;
+  background: #a3d768;
+  border-radius: 50%;
+}
+.frog .eye-wrapper.left-eye {
+  left: 20px;
+}
+.frog .eye-wrapper.right-eye {
+  right: 20px;
+}
+.frog .eye-wrapper .eye {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -21px;
+  margin-top: -21px;
+  width: 42px;
+  height: 42px;
+  background: #fff;
+  border-radius: 50%;
+  animation: fadeIn 2.8s linear infinite;
+}
+.frog .eye-wrapper .eye .pupil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -12px;
+  margin-top: -12px;
+  width: 24px;
+  height: 24px;
+  background: #3f6a34;
+  border-radius: 50%;
+}
+.frog .eye-wrapper .eye .pupil::after {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 6px;
+  left: 0;
+  background: #fff;
+  border-radius: 50%;
+  content: '';
+}
+.frog .eye-wrapper .eyebrow {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  margin-left: -16px;
+  width: 32px;
+  height: 32px;
+  opacity: 0;
+  border-top: 6px solid #3f6a34;
+  border-radius: 30px;
+  animation: fadeOut 2.8s linear infinite;
+}
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+  20% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+  78% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+  20% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+  78% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+  20% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+  78% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+  20% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+  78% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+@-moz-keyframes fadeOut {
+  0% {
+    opacity: 0;
+    top: 24px;
+  }
+  20% {
+    opacity: 1;
+    top: 12px;
+  }
+  78% {
+    opacity: 1;
+    top: 12px;
+  }
+  80% {
+    opacity: 0;
+    top: 24px;
+  }
+}
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 0;
+    top: 24px;
+  }
+  20% {
+    opacity: 1;
+    top: 12px;
+  }
+  78% {
+    opacity: 1;
+    top: 12px;
+  }
+  80% {
+    opacity: 0;
+    top: 24px;
+  }
+}
+@-o-keyframes fadeOut {
+  0% {
+    opacity: 0;
+    top: 24px;
+  }
+  20% {
+    opacity: 1;
+    top: 12px;
+  }
+  78% {
+    opacity: 1;
+    top: 12px;
+  }
+  80% {
+    opacity: 0;
+    top: 24px;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 0;
+    top: 24px;
+  }
+  20% {
+    opacity: 1;
+    top: 12px;
+  }
+  78% {
+    opacity: 1;
+    top: 12px;
+  }
+  80% {
+    opacity: 0;
+    top: 24px;
+  }
+}
+@-moz-keyframes hide {
+  0% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+  }
+  74% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes hide {
+  0% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+  }
+  74% {
+    opacity: 0;
+  }
+}
+@-o-keyframes hide {
+  0% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+  }
+  74% {
+    opacity: 0;
+  }
+}
+@keyframes hide {
+  0% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+  }
+  74% {
+    opacity: 0;
+  }
+}

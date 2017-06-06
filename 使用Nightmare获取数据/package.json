@@ -1,0 +1,17 @@
+{
+  "name": "nightmare-crawling",
+  "version": "1.0.0",
+  "description": "get page data by nightmare-crawling",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "nightmare"
+  ],
+  "author": "Dalon",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^1.6.10"
+  }
+}

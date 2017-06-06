@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>观察者模式</title>
+</head>
+<body>
+    <script>
+        //     观察者对象
+        var Observer = (function(){
+            // `存储信息的容器    私有属性`
+            var messages = {};
+            return {
+                //    注册订阅
+                    register : function(type, fn){
+                        //    如果该消息不存在，则创建消息
+                        if(typeof messages[type] === 'undefined'){
+                            messages[type] = [fn];
+                        //    如果消息存在
+                        }else{
+                        //     将动作方法推入消息对应的动作执行列表
+                                messages[type].push(fn);
+                        }
+                    },
+                //     发布信息
+                    publish : function(type, args){
+                        // 如果不存在该条消息
+                        if(!messages[type]){
+                            return ;
+                        }
+                        //     定义消息信息
+                        var events = {
+                            type : type,    //    消息类型
+                            args : args ||   {} //    消息携带的数据
+                        },
+                        len = messages[type].length;        //消息动作的长度
+
+                        // 遍历消息动作
+                        for(var i = 0;i<len;i++){
+                            //     将每条消息通知给订阅者
+                            messages[type][i].call(this, events);
+                        }
+                    },
+                //    取消订阅
+                    cancel : function(type, fn){
+                        //     如果存在该类型的消息
+                        if(messages[type] instanceof Array){
+                            var i = messages[type].length -1;
+                            // 遍历通知方法
+                            for(; i >= 0 ; i--){
+                                //     如果有通知该订阅者的方法，则移除
+                                //     &&的短路机制
+                                //     splice的三种功能(删除、替换、插入)之一
+                                messages[type][i] === fn && messages[type].splice(i,1);
+                            }
+                        }
+                    }
+            };
+        })();
+
+        //     测试
+
+        var User = function(name){
+            this.name = name;
+        }
+
+        //    用户需要订阅报纸才能阅读
+        //    type 报纸类型
+        User.prototype.subscribe = function(type){
+            Observer.register(type, this.read);
+            console.log(this.name + '订阅了:'+type+'报纸');
+        }
+
+        //     用户取消订阅
+        User.prototype.unsubscribe = function(type){
+            console.log(this.name + '取消对'+type+'报纸的订阅！');
+        }
+
+        //     报社
+        var Newspages = function(){};
+
+        //     报社出版不同的报纸
+        Newspages.prototype.send = function(type){
+            console.log('报社推出了：'+type+ '报');
+            Observer.publish(type);
+        };
+
+        // 报社出版两种类型的报纸
+
+        var newOffice = new Newspages();
+                newOffice.send("体育");
+                newOffice.send("科技");
+        // 三个用户
+
+        var user1 = new User('用户1:');
+        var user2 = new User('用户2:');
+        var user3 = new User('用户3:');
+
+        user1.subscribe('体育');
+        user1.subscribe('科技');
+
+        user2.subscribe("体育");
+        user3.subscribe("体育");
+
+        user3.unsubscribe('体育');
+    </script>
+</body>
+</html>
