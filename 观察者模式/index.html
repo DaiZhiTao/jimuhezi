@@ -62,19 +62,20 @@
 
         //     测试
 
-        var User = function(name){
+        function User(name){
             this.name = name;
         }
 
         //    用户需要订阅报纸才能阅读
         //    type 报纸类型
         User.prototype.subscribe = function(type){
-            Observer.register(type, this.read);
+            Observer.register(type, this.action);
             console.log(this.name + '订阅了:'+type+'报纸');
         }
 
         //     用户取消订阅
         User.prototype.unsubscribe = function(type){
+            Observer.cancel(type, this.action);
             console.log(this.name + '取消对'+type+'报纸的订阅！');
         }
 
@@ -82,21 +83,31 @@
         var Newspages = function(){};
 
         //     报社出版不同的报纸
-        Newspages.prototype.send = function(type){
-            console.log('报社推出了：'+type+ '报');
-            Observer.publish(type);
+        Newspages.prototype.send = function(type,msg){
+            console.log('新报纸：'+type+ '报'+",内容为"+msg.msg);
+            Observer.publish(type,msg);
         };
 
         // 报社出版两种类型的报纸
 
         var newOffice = new Newspages();
-                newOffice.send("体育");
-                newOffice.send("科技");
         // 三个用户
 
-        var user1 = new User('用户1:');
-        var user2 = new User('用户2:');
-        var user3 = new User('用户3:');
+        var user1 = new User('用户1');
+        var user2 = new User('用户2');
+        var user3 = new User('用户3');
+
+        user1.action = function(e){
+            console.log('吃瓜群众user1阅读了'+e.type+'报,内容为'+e.args.msg);
+        };
+
+        user2.action = function(e){
+            console.log('吃瓜群众user2卷起了'+e.type+'报,也不管内容竟然是'+e.args.msg);
+        };
+
+        user3.action = function(e){
+            console.log('吃瓜群众user2津津有味地吃起了'+e.type+'报,发现内容竟然是'+e.args.msg)
+        };
 
         user1.subscribe('体育');
         user1.subscribe('科技');
@@ -104,7 +115,10 @@
         user2.subscribe("体育");
         user3.subscribe("体育");
 
+        newOffice.send("体育",{msg:'科比'});
+        newOffice.send("科技",{msg:'人工智障机器人'});
         user3.unsubscribe('体育');
     </script>
 </body>
 </html>
+
